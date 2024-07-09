@@ -1,319 +1,376 @@
+"use client"
+
+import { useRouter } from "next/navigation"
 import Image from "next/image"
-import { TrashIcon, PencilSquareIcon } from "@heroicons/react/24/solid"
+import { EyeIcon, PencilSquareIcon } from "@heroicons/react/24/solid"
 
 export default function Home() {
+	const router = useRouter()
+
 	const users = [
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		},
 		{
 			fullName: "John Doe",
 			email: "john@example.com",
 			password: "123456789",
-			server: "192.16.1.1"
+			server: "192.16.1.1",
+			balance: 500
 		}
 	]
 
@@ -337,8 +394,11 @@ export default function Home() {
 						<p className="text-white text-lg font-semibold text-center w-[10%]">
 							Password
 						</p>
-						<p className="text-white text-lg font-semibold text-center w-[15%]">
+						<p className="text-white text-lg font-semibold text-center w-[10%]">
 							Server
+						</p>
+						<p className="text-white text-lg font-semibold text-center w-[10%]">
+							Balance
 						</p>
 						<p className="text-white text-lg font-semibold text-center w-[10%]">
 							Actions
@@ -361,14 +421,23 @@ export default function Home() {
 									<p className="text-white text-sm truncate text-center w-[10%]">
 										{item?.password}
 									</p>
-									<p className="text-white text-sm truncate text-center w-[15%]">
+									<p className="text-white text-sm truncate text-center w-[10%]">
 										{item?.server}
+									</p>
+									<p className="text-white text-sm truncate text-center w-[10%]">
+										${item?.balance}
 									</p>
 									<p className="flex flex-row gap-2 items-center justify-center w-[10%]">
 										<button>
-											<TrashIcon className="size-5 text-secondary" />
+											<EyeIcon className="size-5 text-secondary" />
 										</button>
-										<button>
+										<button
+											onClick={() => {
+												router?.push(
+													`/admin/edit-user/${key}`
+												)
+											}}
+										>
 											<PencilSquareIcon className="size-5 text-secondary" />
 										</button>
 									</p>
