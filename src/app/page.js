@@ -13,8 +13,8 @@ export default function Login() {
 						width={200}
 						height={200}
 					/>
-					<div className="w-full h-full flex flex-col  items-center pt-4 gap-4 justify-start  ">
-						<div className="username bg-primary flex w-9/12 items-center h-14 rounded-full px-2 gap-2  ">
+					<div className="w-full h-full flex flex-col  items-center pt-4 gap-4 justify-start">
+						<div className="username bg-primary flex w-9/12 items-center h-14 rounded-full px-3 gap-2">
 							<CiUser className="text-secondary text-2xl font-bold" />
 							<input
 								type="text"
@@ -22,7 +22,7 @@ export default function Login() {
 								placeholder="Username"
 							/>
 						</div>
-						<div className="username bg-primary flex w-9/12 items-center h-14 rounded-full px-2 gap-2  ">
+						<div className="username bg-primary flex w-9/12 items-center h-14 rounded-full px-3 gap-2  ">
 							<CiUser className="text-secondary text-2xl font-bold" />
 							<input
 								type="password"
