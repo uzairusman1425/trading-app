@@ -8,7 +8,7 @@ export default function Login() {
 			<section className="w-screen h-screen  flex items-center justify-center bg-white">
 				<div className="login card w-[500px] h-[700px] bg-[#1d1d27] flex flex-col gap-4 items-center justify-start pt-10   shadow-2xl  rounded-lg ">
 					<Image
-						src={"../../../public/logo.webp"}
+						src={"../../public/logo.webp"}
 						alt="logo"
 						width={200}
 						height={200}
