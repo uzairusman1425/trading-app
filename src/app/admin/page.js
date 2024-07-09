@@ -1,12 +1,17 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 
 export default function Login() {
+	const router = useRouter()
+
 	const [email, setEmail] = useState("")
 	const [password, setPassword] = useState("")
 
-	const handleSubmit = () => {}
+	const handleSubmit = () => {
+		router?.push("/admin/home")
+	}
 
 	return (
 		<div className="h-screen w-screen bg-sky-50 flex flex-col gap-10 items-center justify-center">
