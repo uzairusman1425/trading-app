@@ -380,9 +380,14 @@ export default function Home() {
 				<Image src={"/logo.webp"} alt="logo" height={100} width={100} />
 			</div>
 			<div className="flex-1 flex flex-col gap-5 p-10">
-				<p className="text-3xl font-semibold text-secondary">
-					All Users
-				</p>
+				<div className="flex flex-row items-center justify-between w-full">
+					<p className="text-3xl font-semibold text-secondary">
+						All Users
+					</p>
+					<button className="h-12 w-40 flex items-center justify-center rounded-xl bg-secondary text-white font-semibold" onClick={() => {router?.push("/admin/add-user")}}>
+						Add
+					</button>
+				</div>
 				<div className="max-h-[70vh] flex-1 flex flex-col gap-5 border border-secondary rounded-xl py-5">
 					<div className="w-full flex flex-row items-center justify-evenly">
 						<p className="text-white text-lg font-semibold text-center w-[15%]">
