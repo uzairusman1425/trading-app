@@ -1,10 +1,42 @@
 "use client"
 
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
+import axios from "axios"
 
 export default function AddUser() {
+	const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
+
 	const router = useRouter()
+
+	const [fullName, setFullName] = useState("")
+	const [email, setEmail] = useState("")
+	const [password, setPassword] = useState("")
+	const [server, setServer] = useState("")
+	const [balance, setBalance] = useState(0)
+
+	const handleSubmit = async () => {
+		const payload = {
+			email: email,
+			password: password,
+			serverNAme: server,
+			fullName: fullName,
+			accountBalance: balance
+		}
+
+		await axios
+			.post(`${API_BASE_URL}/auth/register`, payload)
+			?.then((res) => {
+				console.log(res)
+				if (res?.status === 200) {
+					router?.back()
+				}
+			})
+			?.catch((err) => {
+				console.log(err)
+			})
+	}
 
 	return (
 		<div className="h-screen w-screen bg-primary flex flex-col">
@@ -21,20 +53,32 @@ export default function AddUser() {
 						<input
 							className="h-10 w-72 rounded-lg px-3"
 							type="text"
+							value={fullName}
+							onChange={(e) => {
+								setFullName(e.target.value)
+							}}
 						/>
 					</div>
 					<div className="flex flex-col gap-1">
 						<p className="text-secondary text-lg">Email</p>
 						<input
 							className="h-10 w-72 rounded-lg px-3"
-							type="text"
+							type="email"
+							value={email}
+							onChange={(e) => {
+								setEmail(e.target.value)
+							}}
 						/>
 					</div>
 					<div className="flex flex-col gap-1">
 						<p className="text-secondary text-lg">Password</p>
 						<input
 							className="h-10 w-72 rounded-lg px-3"
-							type="text"
+							type="password"
+							value={password}
+							onChange={(e) => {
+								setPassword(e.target.value)
+							}}
 						/>
 					</div>
 					<div className="flex flex-col gap-1">
@@ -42,6 +86,10 @@ export default function AddUser() {
 						<input
 							className="h-10 w-72 rounded-lg px-3"
 							type="text"
+							value={server}
+							onChange={(e) => {
+								setServer(e.target.value)
+							}}
 						/>
 					</div>
 					<div className="flex flex-col gap-1">
@@ -49,11 +97,18 @@ export default function AddUser() {
 						<input
 							className="h-10 w-72 rounded-lg px-3"
 							type="number"
+							value={balance}
+							onChange={(e) => {
+								setBalance(e.target.value)
+							}}
 						/>
 					</div>
 				</div>
 				<div className="flex flex-row items-center justify-end gap-10 w-full">
-					<button className="h-12 w-40 flex items-center justify-center rounded-xl bg-secondary text-white font-semibold">
+					<button
+						className="h-12 w-40 flex items-center justify-center rounded-xl bg-secondary text-white font-semibold"
+						onClick={handleSubmit}
+					>
 						Save
 					</button>
 					<button
