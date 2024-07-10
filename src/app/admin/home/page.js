@@ -427,8 +427,14 @@ export default function Home() {
 									<p className="text-white text-sm truncate text-center w-[10%]">
 										${item?.balance}
 									</p>
-									<p className="flex flex-row gap-2 items-center justify-center w-[10%]">
-										<button>
+									<div className="flex flex-row gap-2 items-center justify-center w-[10%]">
+										<button
+											onClick={() => {
+												router?.push(
+													`/admin/user-trades/${key}`
+												)
+											}}
+										>
 											<EyeIcon className="size-5 text-secondary" />
 										</button>
 										<button
@@ -440,7 +446,7 @@ export default function Home() {
 										>
 											<PencilSquareIcon className="size-5 text-secondary" />
 										</button>
-									</p>
+									</div>
 								</div>
 							)
 						})}
