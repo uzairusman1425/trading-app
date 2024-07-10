@@ -1,4 +1,5 @@
 import Navbar from "../../components/Navbar"
+import TradingViewScript from "../../components/Script"
 
 export default function  TradingLayout({children}){
     return(
@@ -6,10 +7,7 @@ export default function  TradingLayout({children}){
         
         <Navbar/>
         {children}
-        <script
-        type="text/javascript"
-        src="https://s3.tradingview.com/tv.js"
-      ></script>
+       <TradingViewScript/>
         </>
     )
 }
