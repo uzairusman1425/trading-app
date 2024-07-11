@@ -1,11 +1,15 @@
 "use client"
 
+import { useContext } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { EyeIcon, PencilSquareIcon } from "@heroicons/react/24/solid"
+import { AppContext } from "../../../context/context"
 
 export default function Home() {
 	const router = useRouter()
+
+	const { state } = useContext(AppContext)
 
 	const users = [
 		{
@@ -374,6 +378,8 @@ export default function Home() {
 		}
 	]
 
+	console.log(state?.accessToken)
+
 	return (
 		<div className="h-screen w-screen bg-primary flex flex-col">
 			<div className="h-32 w-full bg-black shadow-xl gap-10 px-5 flex items-center">
@@ -384,7 +390,12 @@ export default function Home() {
 					<p className="text-3xl font-semibold text-secondary">
 						All Users
 					</p>
-					<button className="h-12 w-40 flex items-center justify-center rounded-xl bg-secondary text-white font-semibold" onClick={() => {router?.push("/admin/add-user")}}>
+					<button
+						className="h-12 w-40 flex items-center justify-center rounded-xl bg-secondary text-white font-semibold"
+						onClick={() => {
+							router?.push("/admin/add-user")
+						}}
+					>
 						Add
 					</button>
 				</div>

@@ -4,6 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import axios from "axios"
+import toast from "react-hot-toast"
 
 export default function AddUser() {
 	const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
@@ -30,11 +31,13 @@ export default function AddUser() {
 			?.then((res) => {
 				console.log(res)
 				if (res?.status === 200) {
+					toast?.success("User created successfully!")
 					router?.back()
 				}
 			})
 			?.catch((err) => {
 				console.log(err)
+				toast?.error("Error!")
 			})
 	}
 

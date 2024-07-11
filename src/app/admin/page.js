@@ -1,16 +1,44 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useContext } from "react"
 import { useRouter } from "next/navigation"
+import axios from "axios"
+import toast from "react-hot-toast"
+import { AppContext } from "../../context/context"
 
 export default function Login() {
+	const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
+
+	const { dispatch } = useContext(AppContext)
+
 	const router = useRouter()
 
 	const [email, setEmail] = useState("")
 	const [password, setPassword] = useState("")
 
-	const handleSubmit = () => {
-		router?.push("/admin/home")
+	const handleSubmit = async () => {
+		const payload = {
+			email: email,
+			password: password
+		}
+
+		await axios
+			.post(`${API_BASE_URL}/auth/loginAdmin`, payload)
+			?.then((res) => {
+				console.log(res)
+				if (res?.status === 200) {
+					toast?.success("Sign in successful!")
+					dispatch({
+						type: "SET_ACCESS_TOKEN",
+						payload: res?.data?.accessToken
+					})
+					router?.push("/admin/home")
+				}
+			})
+			?.catch((err) => {
+				console.log(err)
+				toast?.error("Error!")
+			})
 	}
 
 	return (
