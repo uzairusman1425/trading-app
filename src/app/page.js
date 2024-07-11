@@ -31,7 +31,7 @@ export default function Login() {
     }
 
     try {
-      const response = await fetch("http://185.224.139.104:8080/auth/login", {
+      const response = await fetch("185.224.139.104:8080/auth/login", {
         method: "POST",
         body: JSON.stringify({ email, password }),
         headers: {
