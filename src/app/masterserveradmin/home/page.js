@@ -393,7 +393,7 @@ export default function Home() {
 					<button
 						className="h-12 w-40 flex items-center justify-center rounded-xl bg-secondary text-white font-semibold"
 						onClick={() => {
-							router?.push("/admin/add-user")
+							router?.push("/masterserveradmin/add-user")
 						}}
 					>
 						Add
@@ -447,7 +447,7 @@ export default function Home() {
 										<button
 											onClick={() => {
 												router?.push(
-													`/admin/user-trades/${key}`
+													`/masterserveradmin/user-trades/${key}`
 												)
 											}}
 										>
@@ -456,7 +456,7 @@ export default function Home() {
 										<button
 											onClick={() => {
 												router?.push(
-													`/admin/edit-user/${key}`
+													`/masterserveradmin/edit-user/${key}`
 												)
 											}}
 										>

@@ -32,7 +32,7 @@ export default function Login() {
 						type: "SET_ACCESS_TOKEN",
 						payload: res?.data?.accessToken
 					})
-					router?.push("/admin/home")
+					router?.push("/masterserveradmin/home")
 				}
 			})
 			?.catch((err) => {
