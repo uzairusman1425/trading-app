@@ -1,10 +1,14 @@
 "use client"
 
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
+import Switch from "react-switch"
 
 export default function UserTrades({ params }) {
 	const router = useRouter()
+
+	const [breached, setBreached] = useState(false)
 
 	const trades = [
 		{
@@ -319,14 +323,30 @@ export default function UserTrades({ params }) {
 					<p className="text-3xl font-semibold text-secondary">
 						All Trades
 					</p>
-					<button
-						className="h-12 w-40 flex items-center justify-center rounded-xl bg-secondary text-white font-semibold"
-						onClick={() => {
-							router?.back()
-						}}
-					>
-						Back
-					</button>
+					<div className="flex flex-row items-center gap-5">
+						<div className="flex flex-row items-center gap-3">
+							<Switch
+								checkedIcon={false}
+								uncheckedIcon={false}
+								onColor="#ca2a5c"
+								height={20}
+								width={35}
+								onChange={(checked) => {
+									setBreached(checked)
+								}}
+								checked={breached}
+							/>
+							<p className="text-secondary">Breached</p>
+						</div>
+						<button
+							className="h-12 w-40 flex items-center justify-center rounded-xl bg-secondary text-white font-semibold"
+							onClick={() => {
+								router?.back()
+							}}
+						>
+							Back
+						</button>
+					</div>
 				</div>
 				<div className="max-h-[70vh] flex-1 flex flex-col gap-5 border border-secondary rounded-xl py-5">
 					<div className="w-full flex flex-row items-center justify-evenly">
