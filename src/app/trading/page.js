@@ -8,6 +8,9 @@ import TradingViewWidget from "../../components/TradingView";
 import OrderCard from "../../components/Card";
 import Script from "next/script";
 
+import OrderCard from "../../components/Card";
+import Script from "next/script";
+
 
 export default function Trading() {
   const [isBuyModalVisible, setIsBuyModalVisible] = useState(false);
@@ -24,6 +27,11 @@ export default function Trading() {
   const [sellSortDiv, setsellSortDiv] = useState(true);
   const [sellNow, setSellNow] = useState(true);
   const [sellAt, setSellAt] = useState(true);
+  const [selectedCoin, setSelectedCoin] = useState("BITSTAMP:BTCUSD");
+
+  const handleCoinChange = (event) => {
+    setSelectedCoin(event.target.value);
+  };
   const [selectedCoin, setSelectedCoin] = useState("BITSTAMP:BTCUSD");
 
   const handleCoinChange = (event) => {
@@ -209,6 +217,46 @@ export default function Trading() {
       
          
          
+        </div>
+      </div>
+      <div className="w-full h-full bg-black pt-10 overflow-x-auto flex items-center justify-center pb-10">
+        <div className="w-full sm:w-[90%] h-full flex flex-col gap-2  text-[8px] lg:text-[12px]">
+          <h1 className="text-secondary text-xl font-bold text-center mt-2">
+            ORDER TABLE
+          </h1>
+          <div className="w-full h-12 flex items-center text-left mt-4 text-white px-2 border-[2px] border-secondary rounded-lg">
+            <p className="w-[15%]"> Time </p>
+            <p className="w-[10%]"> Coin </p>
+            <p className="w-[20%]"> CoinCode</p>
+            <p className="w-[10%]"> Amount</p>
+            <p className="w-[10%]"> Gains </p>
+            <p className="w-[10%]"> Gains Percent </p>
+            <p className="w-[10%]"> Type </p>
+            <p className="w-[10%]"> Order </p>
+            <p className="w-[10%]"> Completed Price At</p>
+          </div>
+         <div className="w-full h-16 flex items-center text-left text-white px-2 border-b-[2px] pt-4 border-secondary rounded-lg">
+            <p className="w-[15%]"> 7/11/2024, 8:34:53 PM </p>
+            <p className="w-[10%]"> bitcoin </p>
+            <p className="w-[20%]"> BINANCE:BTCUSDT </p>
+            <p className="w-[10%]"> $2 </p>
+            <p className="w-[10%]"> $ -0.00 </p>
+            <p className="w-[10%]"> -0.24% </p>
+            <p className="w-[10%]"> buyNow </p>
+            <p className="w-[10%]"> true </p>
+            <p className="w-[10%]"> 100</p>
+          </div>
+                  <div className="w-full h-16 flex items-center text-left text-white px-2 border-b-[2px] pt-4 border-secondary rounded-lg">
+            <p className="w-[15%]"> 7/11/2024, 8:34:53 PM </p>
+            <p className="w-[10%]"> bitcoin </p>
+            <p className="w-[20%]"> BINANCE:BTCUSDT </p>
+            <p className="w-[10%]"> $2 </p>
+            <p className="w-[10%]"> $ -0.00 </p>
+            <p className="w-[10%]"> -0.24% </p>
+            <p className="w-[10%]"> buyNow </p>
+            <p className="w-[10%]"> true </p>
+            <p className="w-[10%]"> 100</p>
+          </div>
         </div>
       </div>
 
