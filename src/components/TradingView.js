@@ -1,14 +1,12 @@
-// src/TradingViewWidget.js
-import React, { useEffect, useState, useRef } from 'react';
-// import axios from 'axios';
+import React, { useEffect, useRef } from 'react';
 
-const TradingViewWidget = ({ symbol = "BITSTAMP:BTCUSD" }) => {
+const TradingViewWidget = ({ symbol }) => {
   const containerRef = useRef(null);
 
   useEffect(() => {
     if (containerRef.current && window.TradingView) {
       new window.TradingView.widget({
-        symbol: "BITSTAMP:BTCUSD",
+        symbol,
         autosize: true,
         interval: '1',
         timezone: 'America/Argentina/Buenos_Aires',
@@ -23,6 +21,9 @@ const TradingViewWidget = ({ symbol = "BITSTAMP:BTCUSD" }) => {
         withdateranges: true,
         watchlist: [
           "BITSTAMP:BTCUSD",
+          "BINANCE:ETHUSDT",
+          "BINANCE:DOGEUSDT",
+          "NASDAQ:TSLA",
           "FX:EURUSD",
           "FX:GBPUSD",
           "FX:USDJPY",
@@ -47,6 +48,5 @@ const TradingViewWidget = ({ symbol = "BITSTAMP:BTCUSD" }) => {
     />
   );
 };
-
 
 export default TradingViewWidget;

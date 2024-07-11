@@ -5,7 +5,9 @@ import { FaWallet } from "react-icons/fa6";
 import { FaHouseUser } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
 import TradingViewWidget from "../../components/TradingView";
-import Head from "next/head";
+import OrderCard from "../../components/Card";
+import Script from "next/script";
+
 
 export default function Trading() {
   const [isBuyModalVisible, setIsBuyModalVisible] = useState(false);
@@ -22,6 +24,11 @@ export default function Trading() {
   const [sellSortDiv, setsellSortDiv] = useState(true);
   const [sellNow, setSellNow] = useState(true);
   const [sellAt, setSellAt] = useState(true);
+  const [selectedCoin, setSelectedCoin] = useState("BITSTAMP:BTCUSD");
+
+  const handleCoinChange = (event) => {
+    setSelectedCoin(event.target.value);
+  };
 
   const handleOutsideClick = (e) => {
     if (buyRef.current && !buyRef.current.contains(e.target)) {
@@ -88,23 +95,33 @@ export default function Trading() {
 
   return (
     <>
-      <section className="w-full min-h-screen flex relative">
-        <div className="TradingGraph w-[70%] h-screen ">
+      <Script
+            src="https://s3.tradingview.com/tv.js"
+            strategy="beforeInteractive"
+          />
+      <section className="w-full h-full flex relative flex-col lg:flex-row">
+        <div className="TradingGraph w-full lg:w-[70%] h-full ">
           <div id="tradingview-widget-container" className="h-[800px]">
-            <TradingViewWidget />
+            <TradingViewWidget symbol={selectedCoin} />
           </div>
         </div>
-        <div className="SiderButtons w-[30%] min-h-screen bg-black flex flex-col gap-4 items-center justify-start">
+        <div className="SiderButtons w-full  lg:w-[30%] h-[800px] bg-black flex flex-col gap-4 items-center justify-start">
           <label htmlFor="1" className="text-xl text-white font-bold">
             Choose A Coin
           </label>
-          <select name="Coin" id="1" className="w-[60%] h-12 flex outline-none">
-            <option value="Bitcoin">Bitcoin</option>
-            <option value="Ethereum">Ethereum</option>
-            <option value="Doge Coin">Doge Coin</option>
-            <option value="Tesla">Tesla</option>
+          <select
+            value={selectedCoin}
+            onChange={handleCoinChange}
+            name="Coin"
+            id="1"
+            className="w-[60%] h-12 flex outline-none"
+          >
+            <option value="BITSTAMP:BTCUSD">Bitcoin</option>
+            <option value="BINANCE:ETHUSDT">Ethereum</option>
+            <option value="BINANCE:DOGEUSDT">Doge Coin</option>
+            <option value="NASDAQ:TSLA">Tesla</option>
           </select>
-          <div className="holdings w-[65%] h-[400px] border-2 border-secondary rounded-lg flex flex-col gap-10 items-start pl-4 justify-center">
+          <div className="holdings w-[65%] h-[400px] border-2 shadow-md shadow-secondary border-secondary rounded-lg flex flex-col gap-10 items-start pl-4 justify-center">
             <div className="flex items-center gap-2">
               <LuCircleDollarSign className="text-2xl text-secondary" />
               <h1 className="font-bold text-2xl text-white">Total Assets :</h1>
@@ -144,8 +161,39 @@ export default function Trading() {
               Sell
             </button>
           </div>
+          <div>
+            <button className="bg-secondary text-white font-bold px-5 py-3 rounded-lg mt-4">
+              Reset
+            </button>
+          </div>
         </div>
       </section>
+      <div className="w-full h-full bg-black pt-10 overflow-x-auto flex items-center justify-center pb-10">
+        <div className="w-full sm:w-[90%] h-full flex flex-col gap-2  text-[8px] lg:text-[12px]">
+          <h1 className="text-secondary text-xl font-bold text-center mt-2">
+            ORDER TABLE
+          </h1>
+          <div className="w-full h-12 flex items-center text-left mt-4 text-white px-2 border-[2px] border-secondary rounded-lg">
+            <p className="w-[15%]"> Time </p>
+            <p className="w-[10%]"> Coin </p>
+            <p className="w-[20%]"> CoinCode</p>
+            <p className="w-[10%]"> Amount</p>
+            <p className="w-[10%]"> Gains </p>
+            <p className="w-[10%]"> Gains Percent </p>
+            <p className="w-[10%]"> Type </p>
+            <p className="w-[10%]"> Order </p>
+            <p className="w-[10%]"> Completed Price At</p>
+          </div>
+         <OrderCard/>
+         <OrderCard/>
+         <OrderCard/>
+         <OrderCard/>
+         <OrderCard/>
+         <OrderCard/>
+         <OrderCard/>
+         <OrderCard/>
+        </div>
+      </div>
 
       {isBuyModalVisible && (
         <div className="buy fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
