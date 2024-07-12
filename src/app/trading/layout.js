@@ -6,12 +6,13 @@ export default function TradingLayout({ children }) {
     <>
  
         <section className="w-full h-full">
-          <Navbar />
-          {children}
+         
           <Script
             src="https://s3.tradingview.com/tv.js"
             strategy="beforeInteractive"
           />
+           <Navbar />
+           {children}
         </section>
    
     </>

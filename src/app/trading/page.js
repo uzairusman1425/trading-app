@@ -4,9 +4,16 @@ import { LuCircleDollarSign } from "react-icons/lu";
 import { FaWallet } from "react-icons/fa6";
 import { FaHouseUser } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
-import TradingViewWidget from "../../components/TradingView";
+import Cookies from 'js-cookie';
 import OrderCard from "../../components/Card";
 import Script from "next/script";
+import dynamic from 'next/dynamic';
+ 
+  
+
+const TradingViewWidget = dynamic(() => import('../../components/TradingView'), {
+  ssr: false
+});
 
 
 export default function Trading() {
@@ -24,7 +31,18 @@ export default function Trading() {
   const [sellSortDiv, setsellSortDiv] = useState(true);
   const [sellNow, setSellNow] = useState(true);
   const [sellAt, setSellAt] = useState(true);
+  const[userId,setUserId]=useState('')
   const [selectedCoin, setSelectedCoin] = useState("BITSTAMP:BTCUSD");
+  const [orderType,setOrderType]=useState('buynow')
+  const [buyNowAmount, setBuyNowAmount] = useState('');
+  const [buyAtPrice, setBuyAtPrice] = useState('');
+  const [userdata,setUserData]=useState("")
+  const [amountbalace,setAmountbalance]=useState("")
+
+
+  
+  
+
 
   const handleCoinChange = (event) => {
     setSelectedCoin(event.target.value);
@@ -41,6 +59,34 @@ export default function Trading() {
       setIsSellModalVisible(false);
     }
   };
+const token = Cookies.get('accessToken')
+
+
+  const FetchUser = async ()=>{
+    const response = await fetch('http://185.224.139.104:8080/users/single',{
+      method:'POST',
+       headers : {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      }
+     
+    })
+    const data= await response.json();
+   
+    setAmountbalance(data?.user.accountBalance)
+    console.log(data?.user.wallet?.balance)
+    setUserData(data)
+    setUserId(data?.user?._id)
+  }
+  
+  useEffect(()=>{
+    FetchUser()
+
+  },[])
+
+
+
+
 
   useEffect(() => {
     if (isBuyModalVisible || isSortModalVisible || isSellModalVisisble) {
@@ -77,7 +123,7 @@ export default function Trading() {
     setSortNow(true);
     setSortAt(true);
   };
-  500;
+  
   const HandleSellAt = () => {
     setSortNow(false);
     setSortAt(false);
@@ -93,12 +139,70 @@ export default function Trading() {
     setsellSortDiv(false);
   };
 
+
+  const handleOrderTypeChange = (e) => {
+    setOrderType(e.target.value);
+  };
+
+  
+
+  const handleBuyAmountChange = (e) => {
+    setBuyNowAmount(e.target.value);
+  };
+
+  const handleBuyAtPriceChange = (e) => {
+    setBuyAtPrice(e.target.value);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // if (orderType === 'buyNow') {
+    //   await callBuyNowAPI();
+    // } else if (orderType === 'buyAt') {
+    //   await callBuyAtAPI();
+    // }
+  };
+
+  // const callBuyNowAPI = async () => {
+  //   // Replace with actual API endpoint and request
+  //   const response = await fetch('http://185.224.139.104:8080/trade/669057cb5ad0fbbcaa05de0e', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({ amount:buyNowAmount,symbol:selectedCoin }),
+  //   });
+
+  //   if (response.ok) {
+  //     console.log('Buy Now successful');
+  //   } else {
+  //     console.error('Buy Now failed');
+  //   }
+  // };
+
+  // const callBuyAtAPI = async () => {
+  //   // Replace with actual API endpoint and request
+  //   const response = await fetch('/api/buy-at', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({ amount: buyAmount, price: buyAtPrice }),
+  //   });
+
+  //   if (response.ok) {
+  //     console.log('Buy At successful');
+  //   } else {
+  //     console.error('Buy At failed');
+  //   }
+  // };
+
+
+
   return (
     <>
-      <Script
-            src="https://s3.tradingview.com/tv.js"
-            strategy="beforeInteractive"
-          />
+    <Script src="https://s3.tradingview.com/tv.js" strategy="afterInteractive" />
       <section className="w-full h-full flex relative flex-col lg:flex-row">
         <div className="TradingGraph w-full lg:w-[70%] h-full ">
           <div id="tradingview-widget-container" className="h-[800px]">
@@ -124,20 +228,20 @@ export default function Trading() {
           <div className="holdings w-[65%] h-[400px] border-2 shadow-md shadow-secondary border-secondary rounded-lg flex flex-col gap-10 items-start pl-4 justify-center">
             <div className="flex items-center gap-2">
               <LuCircleDollarSign className="text-2xl text-secondary" />
-              <h1 className="font-bold text-2xl text-white">Total Assets :</h1>
+              <h1 className="font-bold text-2xl text-white">Total Assets : 0 </h1>
             </div>
             <div className="flex items-center gap-2">
               <FaWallet className="text-2xl text-secondary" />
-              <h1 className="font-bold text-white text-2xl">Balance :</h1>
+              <h1 className="font-bold text-white text-2xl">Balance : {amountbalace} </h1>
             </div>
             <div className="flex items-center gap-2">
               <FaHouseUser className="text-2xl text-secondary" />
-              <h1 className="font-bold text-white text-2xl">Holdings :</h1>
+              <h1 className="font-bold text-white text-2xl">Holdings : 0 </h1>
             </div>
             <div className="flex items-center gap-2">
               <FaHouseUser className="text-2xl text-secondary" />
               <h1 className="font-bold text-white text-2xl">
-                Sorted Holdings :
+                Sorted Holdings : 0
               </h1>
             </div>
           </div>
@@ -184,67 +288,71 @@ export default function Trading() {
             <p className="w-[10%]"> Order </p>
             <p className="w-[10%]"> Completed Price At</p>
           </div>
-         <OrderCard/>
-         <OrderCard/>
-         <OrderCard/>
-         <OrderCard/>
-         <OrderCard/>
-         <OrderCard/>
-         <OrderCard/>
-         <OrderCard/>
+         <OrderCard userid={userId} token={token}/>
+        
+        
         </div>
       </div>
 
       {isBuyModalVisible && (
-        <div className="buy fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div
-            ref={buyRef}
-            className="buycontent w-[300px] sm:w-[400px] lg:w-3/12 flex flex-col items-start pl-4 justify-center gap-10 h-[350px] bg-black border-2 border-secondary rounded-lg overflow-auto"
-          >
-            <h1 className="text-white font-semibold">Buy Modal</h1>
-            <div className="radio-inputs flex text-white items-center gap-4 font-semibold">
-              <h1>Order Type:</h1>
-              <label htmlFor="buyNow">Buy Now</label>
-              <input
-                value={buyNow}
-                onChange={handleBuyNow}
-                type="radio"
-                name="buyNow"
-                id="buyNow"
-              />
-              <label htmlFor="buyAt">Buy At</label>
-              <input
-                value={buyAt}
-                onChange={handleBuyAt}
-                type="radio"
-                name="buyNow"
-                id="buyAt"
-              />
-            </div>
-            <div className="buy-amount flex text-white items-center gap-2">
-              <h1>Buy Amount:</h1>
+      <div className="buy fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <form
+          ref={buyRef}
+          className="buycontent w-[300px] sm:w-[400px] lg:w-3/12 flex flex-col items-start pl-4 justify-center gap-10 h-[350px] bg-black border-2 border-secondary rounded-lg overflow-auto"
+          onSubmit={handleSubmit}
+        >
+          <h1 className="text-white font-semibold">Buy Modal</h1>
+          <div className="radio-inputs flex text-white items-center gap-4 font-semibold">
+            <h1>Order Type:</h1>
+            <label htmlFor="buyNow">Buy Now</label>
+            <input
+              value="buyNow"
+              onChange={handleOrderTypeChange}
+              type="radio"
+              name="orderType"
+              id="buyNow"
+              checked={orderType === 'buyNow'}
+            />
+            <label htmlFor="buyAt">Buy At</label>
+            <input
+              value="buyAt"
+              onChange={handleOrderTypeChange}
+              type="radio"
+              name="orderType"
+              id="buyAt"
+              checked={orderType === 'buyAt'}
+            />
+          </div>
+          <div className="buy-amount flex text-white items-center gap-2">
+            <h1>Buy Amount:</h1>
+            <input
+              type="number"
+              className="w-[60%] h-8 outline-none text-black"
+              placeholder="Quantity in ($)"
+              value={buyNowAmount}
+              onChange={handleBuyAmountChange}
+            />
+          </div>
+          {orderType === 'buyAt' && (
+            <div className="buy-at-price flex text-white items-center gap-2">
+              <h1>Buy At Price:</h1>
               <input
                 type="number"
-                className="w-[60%] h-8 outline-none"
-                placeholder="Quantity in ($)"
+                className="w-[60%] h-8 outline-none text-black"
+                placeholder="Price"
+                value={buyAtPrice}
+                onChange={handleBuyAtPriceChange}
               />
             </div>
-            {!buyAt && (
-              <div className="buy-at-price flex text-white items-center gap-2">
-                <h1>Buy At Price:</h1>
-                <input
-                  type="number"
-                  className="w-[60%] h-8 outline-none"
-                  placeholder="Price"
-                />
-              </div>
-            )}
-            <button className="bg-secondary text-white font-bold w-[100px] h-10 rounded-lg">
-              Buy
-            </button>
-          </div>
-        </div>
-      )}
+          )}
+          <button className="bg-secondary text-white font-bold w-[100px] h-10 rounded-lg">
+            Buy
+          </button>
+        </form>
+      </div>
+    )}
+
+
 
       {isSortModalVisible && (
         <div className="buy fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
@@ -282,7 +390,7 @@ export default function Trading() {
             </div>
             {!sortAt && (
               <div className="buy-at-price flex text-white items-center gap-2">
-                <h1>Sort At Price:</h1>
+                <h1>Sort At Price: </h1>
                 <input
                   type="number"
                   className="w-[60%] h-8 outline-none"

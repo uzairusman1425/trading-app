@@ -43,6 +43,7 @@ export default function Login() {
       const { accessToken, refreshToken } = data;
       Cookies.set("accessToken", accessToken, { expires: 7, path: "/" });
       Cookies.set("refreshToken", refreshToken, { expires: 7, path: "/" });
+      Cookies.set('userId', data.userDetails._id, { expires: 7 });
       if (response.ok) {
         toast.success("Login successful");
         router.push("/trading");
