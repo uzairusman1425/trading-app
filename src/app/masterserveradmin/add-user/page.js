@@ -21,7 +21,7 @@ export default function AddUser() {
 		const payload = {
 			email: email,
 			password: password,
-			serverNAme: server,
+			server: server,
 			fullName: fullName,
 			accountBalance: balance
 		}

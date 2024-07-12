@@ -1,384 +1,38 @@
 "use client"
 
-import { useContext } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
+import axios from "axios"
 import { EyeIcon, PencilSquareIcon } from "@heroicons/react/24/solid"
 import { AppContext } from "../../../context/context"
 
 export default function Home() {
+	const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
+
 	const router = useRouter()
 
 	const { state } = useContext(AppContext)
 
-	const users = [
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		},
-		{
-			fullName: "John Doe",
-			email: "john@example.com",
-			password: "123456789",
-			server: "192.16.1.1",
-			balance: 500
-		}
-	]
+	const [users, setUsers] = useState([])
 
-	console.log(state?.accessToken)
+	useEffect(() => {
+		;(async () => {
+			await axios
+				.get(`${API_BASE_URL}/users`, {
+					headers: {
+						Authorization: `Bearer ${state?.accessToken}`
+					}
+				})
+				?.then((res) => {
+					console.log(res)
+					setUsers(res?.data?.users)
+				})
+				?.catch((err) => {
+					console.error(err)
+				})
+		})()
+	}, [state, API_BASE_URL])
 
 	return (
 		<div className="h-screen w-screen bg-primary flex flex-col">
@@ -441,13 +95,13 @@ export default function Home() {
 										{item?.server}
 									</p>
 									<p className="text-white text-sm truncate text-center w-[10%]">
-										${item?.balance}
+										${item?.accountBalance}
 									</p>
 									<div className="flex flex-row gap-2 items-center justify-center w-[10%]">
 										<button
 											onClick={() => {
 												router?.push(
-													`/masterserveradmin/user-trades/${key}`
+													`/masterserveradmin/user-trades/${item?._id}`
 												)
 											}}
 										>
@@ -456,7 +110,7 @@ export default function Home() {
 										<button
 											onClick={() => {
 												router?.push(
-													`/masterserveradmin/edit-user/${key}`
+													`/masterserveradmin/edit-user/${item?._id}`
 												)
 											}}
 										>
