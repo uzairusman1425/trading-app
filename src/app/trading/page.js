@@ -4,17 +4,19 @@ import { LuCircleDollarSign } from "react-icons/lu";
 import { FaWallet } from "react-icons/fa6";
 import { FaHouseUser } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 import OrderCard from "../../components/Card";
 import Script from "next/script";
-import dynamic from 'next/dynamic';
- 
-  
+import dynamic from "next/dynamic";
+import toast from "react-hot-toast";
+import axios from "axios";
 
-const TradingViewWidget = dynamic(() => import('../../components/TradingView'), {
-  ssr: false
-});
-
+const TradingViewWidget = dynamic(
+  () => import("../../components/TradingView"),
+  {
+    ssr: false,
+  }
+);
 
 export default function Trading() {
   const [isBuyModalVisible, setIsBuyModalVisible] = useState(false);
@@ -31,18 +33,42 @@ export default function Trading() {
   const [sellSortDiv, setsellSortDiv] = useState(true);
   const [sellNow, setSellNow] = useState(true);
   const [sellAt, setSellAt] = useState(true);
-  const[userId,setUserId]=useState('')
+  const [userId, setUserId] = useState("");
   const [selectedCoin, setSelectedCoin] = useState("BITSTAMP:BTCUSD");
-  const [orderType,setOrderType]=useState('buynow')
-  const [buyNowAmount, setBuyNowAmount] = useState('');
-  const [buyAtPrice, setBuyAtPrice] = useState('');
-  const [userdata,setUserData]=useState("")
-  const [amountbalace,setAmountbalance]=useState("")
+  const [orderType, setOrderType] = useState("buynow");
+  const [buyNowAmount, setBuyNowAmount] = useState("");
+  const [buyAtPrice, setBuyAtPrice] = useState("");
+  const [userdata, setUserData] = useState("");
+  const [amountbalace, setAmountbalance] = useState("");
+  const [options, SetOptions] = useState([]);
 
+  const fetchLiveRates = async () => {
+    const API_KEY = "99bGpKM4Tt5iQO5NBMlV";
+    const BASE_URL = "https://marketdata.tradermade.com/api/v1/live";
+    const symbols = ["EURUSD", "XAUUSD", "USDJPY", "USA30USD", "BTCUSD"].join(
+      ","
+    );
 
-  
-  
+    try {
+      const response = await axios.get(BASE_URL, {
+        params: {
+          currency: symbols,
+          api_key: API_KEY,
+        },
+      });
+      SetOptions(response.data.quotes);
+      console.log("Live Rates:", response.data);
 
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching live rates:", error);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    fetchLiveRates();
+  }, []);
 
   const handleCoinChange = (event) => {
     setSelectedCoin(event.target.value);
@@ -59,34 +85,27 @@ export default function Trading() {
       setIsSellModalVisible(false);
     }
   };
-const token = Cookies.get('accessToken')
+  const token = Cookies.get("accessToken");
 
-
-  const FetchUser = async ()=>{
-    const response = await fetch('http://185.224.139.104:8080/users/single',{
-      method:'POST',
-       headers : {
+  const FetchUser = async () => {
+    const response = await fetch("http://185.224.139.104:8080/users/single", {
+      method: "POST",
+      headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-      }
-     
-    })
-    const data= await response.json();
-   
-    setAmountbalance(data?.user.accountBalance)
-    console.log(data?.user.wallet?.balance)
-    setUserData(data)
-    setUserId(data?.user?._id)
-  }
-  
-  useEffect(()=>{
-    FetchUser()
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await response.json();
+    console.log(data);
+    setAmountbalance(data?.user.accountBalance);
+    console.log(data?.user.wallet?.balance);
+    setUserData(data);
+    setUserId(data?.user?._id);
+  };
 
-  },[])
-
-
-
-
+  useEffect(() => {
+    FetchUser();
+  }, []);
 
   useEffect(() => {
     if (isBuyModalVisible || isSortModalVisible || isSellModalVisisble) {
@@ -123,7 +142,7 @@ const token = Cookies.get('accessToken')
     setSortNow(true);
     setSortAt(true);
   };
-  
+
   const HandleSellAt = () => {
     setSortNow(false);
     setSortAt(false);
@@ -139,12 +158,9 @@ const token = Cookies.get('accessToken')
     setsellSortDiv(false);
   };
 
-
   const handleOrderTypeChange = (e) => {
     setOrderType(e.target.value);
   };
-
-  
 
   const handleBuyAmountChange = (e) => {
     setBuyNowAmount(e.target.value);
@@ -157,29 +173,41 @@ const token = Cookies.get('accessToken')
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // if (orderType === 'buyNow') {
-    //   await callBuyNowAPI();
-    // } else if (orderType === 'buyAt') {
-    //   await callBuyAtAPI();
-    // }
+    if (orderType === "buyNow") {
+      await callBuyNowAPI();
+    } else if (orderType === "buyAt") {
+      // await callBuyAtAPI();
+    }
   };
 
-  // const callBuyNowAPI = async () => {
-  //   // Replace with actual API endpoint and request
-  //   const response = await fetch('http://185.224.139.104:8080/trade/669057cb5ad0fbbcaa05de0e', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({ amount:buyNowAmount,symbol:selectedCoin }),
-  //   });
+  const callBuyNowAPI = async () => {
+    // Replace with actual API endpoint and request
+    const response = await fetch(
+      `http://185.224.139.104:8080/trade/${userId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          amount: buyNowAmount,
+          symbol: selectedCoin,
+          CoinCode: selectedCoin,
+          type: "buy",
+          price: 100,
+        }),
+      }
+    );
+    const data = await response.json();
+    console.log(data.message);
 
-  //   if (response.ok) {
-  //     console.log('Buy Now successful');
-  //   } else {
-  //     console.error('Buy Now failed');
-  //   }
-  // };
+    if (response.ok) {
+      toast.success(data.message);
+    } else {
+      toast.error(data.message);
+    }
+  };
 
   // const callBuyAtAPI = async () => {
   //   // Replace with actual API endpoint and request
@@ -198,11 +226,12 @@ const token = Cookies.get('accessToken')
   //   }
   // };
 
-
-
   return (
     <>
-    <Script src="https://s3.tradingview.com/tv.js" strategy="afterInteractive" />
+      <Script
+        src="https://s3.tradingview.com/tv.js"
+        strategy="afterInteractive"
+      />
       <section className="w-full h-full flex relative flex-col lg:flex-row">
         <div className="TradingGraph w-full lg:w-[70%] h-full ">
           <div id="tradingview-widget-container" className="h-[800px]">
@@ -214,25 +243,35 @@ const token = Cookies.get('accessToken')
             Choose A Coin
           </label>
           <select
-            value={selectedCoin}
-            onChange={handleCoinChange}
-            name="Coin"
-            id="1"
-            className="w-[60%] h-12 flex outline-none"
-          >
-            <option value="BITSTAMP:BTCUSD">Bitcoin</option>
-            <option value="BINANCE:ETHUSDT">Ethereum</option>
-            <option value="BINANCE:DOGEUSDT">Doge Coin</option>
-            <option value="NASDAQ:TSLA">Tesla</option>
-          </select>
+  value={selectedCoin}
+  onChange={handleCoinChange}
+  name="Coin"
+  id="1"
+  className="w-[60%] h-12 flex outline-none"
+>
+  {options
+    .filter((quote) => !quote.error && quote.base_currency && quote.quote_currency) 
+    .map((quote) => (
+      <option
+        key={`${quote.base_currency}/${quote.quote_currency}`}
+        value={`${quote.base_currency}/${quote.quote_currency}`}
+      >
+        {`${quote.base_currency}/${quote.quote_currency}`}
+      </option>
+    ))}
+</select>
           <div className="holdings w-[65%] h-[400px] border-2 shadow-md shadow-secondary border-secondary rounded-lg flex flex-col gap-10 items-start pl-4 justify-center">
             <div className="flex items-center gap-2">
               <LuCircleDollarSign className="text-2xl text-secondary" />
-              <h1 className="font-bold text-2xl text-white">Total Assets : 0 </h1>
+              <h1 className="font-bold text-2xl text-white">
+                Total Assets : 0{" "}
+              </h1>
             </div>
             <div className="flex items-center gap-2">
               <FaWallet className="text-2xl text-secondary" />
-              <h1 className="font-bold text-white text-2xl">Balance : {amountbalace} </h1>
+              <h1 className="font-bold text-white text-2xl">
+                Balance : {amountbalace}{" "}
+              </h1>
             </div>
             <div className="flex items-center gap-2">
               <FaHouseUser className="text-2xl text-secondary" />
@@ -288,71 +327,70 @@ const token = Cookies.get('accessToken')
             <p className="w-[10%]"> Order </p>
             <p className="w-[10%]"> Completed Price At</p>
           </div>
-         <OrderCard userid={userId} token={token}/>
-        
-        
+          <OrderCard userid={userId} token={token} />
         </div>
       </div>
 
       {isBuyModalVisible && (
-      <div className="buy fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-        <form
-          ref={buyRef}
-          className="buycontent w-[300px] sm:w-[400px] lg:w-3/12 flex flex-col items-start pl-4 justify-center gap-10 h-[350px] bg-black border-2 border-secondary rounded-lg overflow-auto"
-          onSubmit={handleSubmit}
-        >
-          <h1 className="text-white font-semibold">Buy Modal</h1>
-          <div className="radio-inputs flex text-white items-center gap-4 font-semibold">
-            <h1>Order Type:</h1>
-            <label htmlFor="buyNow">Buy Now</label>
-            <input
-              value="buyNow"
-              onChange={handleOrderTypeChange}
-              type="radio"
-              name="orderType"
-              id="buyNow"
-              checked={orderType === 'buyNow'}
-            />
-            <label htmlFor="buyAt">Buy At</label>
-            <input
-              value="buyAt"
-              onChange={handleOrderTypeChange}
-              type="radio"
-              name="orderType"
-              id="buyAt"
-              checked={orderType === 'buyAt'}
-            />
-          </div>
-          <div className="buy-amount flex text-white items-center gap-2">
-            <h1>Buy Amount:</h1>
-            <input
-              type="number"
-              className="w-[60%] h-8 outline-none text-black"
-              placeholder="Quantity in ($)"
-              value={buyNowAmount}
-              onChange={handleBuyAmountChange}
-            />
-          </div>
-          {orderType === 'buyAt' && (
-            <div className="buy-at-price flex text-white items-center gap-2">
-              <h1>Buy At Price:</h1>
+        <div className="buy fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <form
+            ref={buyRef}
+            className="buycontent w-[300px] sm:w-[400px] lg:w-3/12 flex flex-col items-start pl-4 justify-center gap-10 h-[350px] bg-black border-2 border-secondary rounded-lg overflow-auto"
+            onSubmit={handleSubmit}
+          >
+            <h1 className="text-white font-semibold">Buy Modal</h1>
+            <div className="radio-inputs flex text-white items-center gap-4 font-semibold">
+              <h1>Order Type:</h1>
+              <label htmlFor="buyNow">Buy Now</label>
+              <input
+                value="buyNow"
+                onChange={handleOrderTypeChange}
+                type="radio"
+                name="orderType"
+                id="buyNow"
+                checked={orderType === "buyNow"}
+              />
+              <label htmlFor="buyAt">Buy At</label>
+              <input
+                value="buyAt"
+                onChange={handleOrderTypeChange}
+                type="radio"
+                name="orderType"
+                id="buyAt"
+                checked={orderType === "buyAt"}
+              />
+            </div>
+            <div className="buy-amount flex text-white items-center gap-2">
+              <h1>Buy Amount:</h1>
               <input
                 type="number"
                 className="w-[60%] h-8 outline-none text-black"
-                placeholder="Price"
-                value={buyAtPrice}
-                onChange={handleBuyAtPriceChange}
+                placeholder="Quantity in ($)"
+                value={buyNowAmount}
+                onChange={handleBuyAmountChange}
               />
             </div>
-          )}
-          <button className="bg-secondary text-white font-bold w-[100px] h-10 rounded-lg">
-            Buy
-          </button>
-        </form>
-      </div>
-    )}
-
-
+            {orderType === "buyAt" && (
+              <div className="buy-at-price flex text-white items-center gap-2">
+                <h1>Buy At Price:</h1>
+                <input
+                  type="number"
+                  className="w-[60%] h-8 outline-none text-black"
+                  placeholder="Price"
+                  value={buyAtPrice}
+                  onChange={handleBuyAtPriceChange}
+                />
+              </div>
+            )}
+            <button
+              type="submit"
+              className="bg-secondary text-white font-bold w-[100px] h-10 rounded-lg"
+            >
+              Buy
+            </button>
+          </form>
+        </div>
+      )}
 
       {isSortModalVisible && (
         <div className="buy fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
