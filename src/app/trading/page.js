@@ -40,35 +40,12 @@ export default function Trading() {
   const [buyAtPrice, setBuyAtPrice] = useState("");
   const [userdata, setUserData] = useState("");
   const [amountbalace, setAmountbalance] = useState("");
-  const [options, SetOptions] = useState([]);
-
-  const fetchLiveRates = async () => {
-    const API_KEY = "99bGpKM4Tt5iQO5NBMlV";
-    const BASE_URL = "https://marketdata.tradermade.com/api/v1/live";
-    const symbols = ["EURUSD", "XAUUSD", "USDJPY", "USA30USD", "BTCUSD"].join(
-      ","
-    );
-
-    try {
-      const response = await axios.get(BASE_URL, {
-        params: {
-          currency: symbols,
-          api_key: API_KEY,
-        },
-      });
-      SetOptions(response.data.quotes);
-      console.log("Live Rates:", response.data);
-
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching live rates:", error);
-      return null;
-    }
-  };
-
-  useEffect(() => {
-    fetchLiveRates();
-  }, []);
+  const [options, setOptions] = useState({
+    majors: [],
+    oils: [],
+    indices: [],
+    metals: [],
+  });
 
   const handleCoinChange = (event) => {
     setSelectedCoin(event.target.value);
@@ -87,24 +64,155 @@ export default function Trading() {
   };
   const token = Cookies.get("accessToken");
 
-  const FetchUser = async () => {
-    const response = await fetch("http://185.224.139.104:8080/users/single", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data = await response.json();
-    console.log(data);
-    setAmountbalance(data?.user.accountBalance);
-    console.log(data?.user.wallet?.balance);
-    setUserData(data);
-    setUserId(data?.user?._id);
-  };
-
   useEffect(() => {
-    FetchUser();
+    const fetchLiveRates = async () => {
+      const API_KEY = "99bGpKM4Tt5iQO5NBMlV";
+      const BASE_URL = "https://marketdata.tradermade.com/api/v1/live";
+      const symbols = [
+        "EURUSD",
+        "USDCHF",
+        "AUDUSD",
+        "GBPUSD",
+        "NZDUSD",
+        "USDJPY",
+        "USDCAD",
+        "EURGBP",
+        "EURCAD",
+        "EURAUD",
+        "EURNZD",
+        "EURCHF",
+        "EURJPY",
+        "GBPJPY",
+        "AUDJPY",
+        "NZDJPY",
+        "CADJPY",
+        "CHFJPY",
+        "GBPCAD",
+        "GBPAUD",
+        "GBPNZD",
+        "GBPCHF",
+        "US500",
+        "US30",
+        "US100",
+        "US2000",
+        "UK100",
+        "GER30",
+        "JP225",
+        "FR40",
+        "HK50",
+        "AUS200",
+        "XAUUSD",
+        "XAGUSD",
+        "XPTUSD",
+        "XPDUSD",
+        "XCUUSD",
+        "USOIL",
+        "UKOIL",
+        "HOUSD",
+        "NGUSD",
+      ].join(",");
+
+      try {
+        const response = await axios.get(BASE_URL, {
+          params: {
+            currency: symbols,
+            api_key: API_KEY,
+          },
+        });
+        const quotes = response.data.quotes;
+
+        console.log("API Quotes:", quotes);
+
+        const categorizeQuotes = () => {
+          const categorized = {
+            majors: [],
+            indices: [],
+            metals: [],
+            oils: [],
+          };
+
+          quotes.forEach((quote) => {
+            if (quote.error) return;
+
+            const pair = quote.instrument
+              ? quote.instrument.replace(".", "/")
+              : `${quote.base_currency}/${quote.quote_currency}`;
+
+            switch (pair) {
+              // Majors
+              case "EUR/USD":
+              case "USD/CHF":
+              case "AUD/USD":
+              case "GBP/USD":
+              case "NZD/USD":
+              case "USD/JPY":
+              case "USD/CAD":
+              case "EUR/GBP":
+              case "EUR/CAD":
+              case "EUR/AUD":
+              case "EUR/NZD":
+              case "EUR/CHF":
+              case "EUR/JPY":
+              case "GBP/JPY":
+              case "AUD/JPY":
+              case "NZD/JPY":
+              case "CAD/JPY":
+              case "CHF/JPY":
+              case "GBP/CAD":
+              case "GBP/AUD":
+              case "GBP/NZD":
+              case "GBP/CHF":
+                categorized.majors.push(pair);
+                break;
+
+              // Indices
+              case "US500/USD":
+              case "US30/USD":
+              case "US100/USD":
+              case "US2000/USD":
+              case "UK100/USD":
+              case "GER30/USD":
+              case "JP225/USD":
+              case "FR40/USD":
+              case "HK50/USD":
+              case "AUS200/USD":
+                categorized.indices.push(pair);
+                break;
+
+              // Metals
+              case "XAU/USD":
+              case "XAG/USD":
+              case "XPT/USD":
+              case "XPD/USD":
+              case "XCU/USD":
+                categorized.metals.push(pair);
+                break;
+
+              // Oils
+              case "USOIL/USD":
+              case "UKOIL/USD":
+              case "HO/USD":
+              case "NG/USD":
+                categorized.oils.push(pair);
+                break;
+
+              default:
+                break;
+            }
+          });
+
+          return categorized;
+        };
+
+        const categorizedOptions = categorizeQuotes();
+        setOptions(categorizedOptions);
+        console.log("Categorized Options:", categorizedOptions);
+      } catch (error) {
+        console.error("Error fetching live rates:", error);
+      }
+    };
+
+    fetchLiveRates();
   }, []);
 
   useEffect(() => {
@@ -243,23 +351,41 @@ export default function Trading() {
             Choose A Coin
           </label>
           <select
-  value={selectedCoin}
-  onChange={handleCoinChange}
-  name="Coin"
-  id="1"
-  className="w-[60%] h-12 flex outline-none"
->
-  {options
-    .filter((quote) => !quote.error && quote.base_currency && quote.quote_currency) 
-    .map((quote) => (
-      <option
-        key={`${quote.base_currency}/${quote.quote_currency}`}
-        value={`${quote.base_currency}/${quote.quote_currency}`}
-      >
-        {`${quote.base_currency}/${quote.quote_currency}`}
-      </option>
-    ))}
-</select>
+            value={selectedCoin}
+            onChange={handleCoinChange}
+            name="Coin"
+            id="1"
+            className="w-[60%] h-12 flex outline-none"
+          >
+            <optgroup label="Majors">
+              {options.majors.map((pair) => (
+                <option key={pair} value={pair}>
+                  {pair}
+                </option>
+              ))}
+            </optgroup>
+            <optgroup label="Indices">
+              {options.indices.map((pair) => (
+                <option key={pair} value={pair}>
+                  {pair}
+                </option>
+              ))}
+            </optgroup>
+            <optgroup label="Metals">
+              {options.metals.map((pair) => (
+                <option key={pair} value={pair}>
+                  {pair}
+                </option>
+              ))}
+            </optgroup>
+            <optgroup label="Oils">
+              {options.oils.map((pair) => (
+                <option key={pair} value={pair}>
+                  {pair}
+                </option>
+              ))}
+            </optgroup>
+          </select>
           <div className="holdings w-[65%] h-[400px] border-2 shadow-md shadow-secondary border-secondary rounded-lg flex flex-col gap-10 items-start pl-4 justify-center">
             <div className="flex items-center gap-2">
               <LuCircleDollarSign className="text-2xl text-secondary" />
