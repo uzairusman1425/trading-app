@@ -40,8 +40,7 @@ export default function Trading() {
 	const [orderType, setOrderType] = useState("buynow")
 	const [buyNowAmount, setBuyNowAmount] = useState("")
 	const [buyAtPrice, setBuyAtPrice] = useState("")
-	const [userdata, setUserData] = useState("")
-	const [amountbalace, setAmountbalance] = useState("")
+	const [userData, setUserData] = useState("")
 	const [options, setOptions] = useState({
 		majors: [],
 		oils: [],
@@ -67,6 +66,26 @@ export default function Trading() {
 	const token = Cookies.get("accessToken")
 
 	useEffect(() => {
+		;(async () => {
+			await axios
+				?.post(
+					`${API_BASE_URL}/users/single`,
+					{},
+					{
+						headers: {
+							Authorization: `Bearer ${token}`
+						}
+					}
+				)
+				?.then((res) => {
+					console.log(res)
+					setUserData(res?.data?.user)
+				})
+				?.catch((err) => {
+					console.log(err)
+				})
+		})()
+
 		const fetchLiveRates = async () => {
 			const API_KEY = "99bGpKM4Tt5iQO5NBMlV"
 			const BASE_URL = "https://marketdata.tradermade.com/api/v1/live"
@@ -398,13 +417,13 @@ export default function Trading() {
 						<div className="flex items-center gap-2">
 							<FaWallet className="text-2xl text-secondary" />
 							<h1 className="font-bold text-white text-2xl">
-								Balance : {amountbalace}{" "}
+								Balance : {userData?.accountBalance}{" "}
 							</h1>
 						</div>
 						<div className="flex items-center gap-2">
 							<FaHouseUser className="text-2xl text-secondary" />
 							<h1 className="font-bold text-white text-2xl">
-								Holdings : 0{" "}
+								Holdings : {userData?.wallets?.length}{" "}
 							</h1>
 						</div>
 						<div className="flex items-center gap-2">

@@ -8,8 +8,7 @@ import { FaEyeSlash } from "react-icons/fa6"
 import { CiLock } from "react-icons/ci"
 import { useRouter } from "next/navigation"
 import Cookies from "js-cookie"
-import { ToastContainer, toast } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
+import toast from "react-hot-toast"
 
 export default function Login() {
 	const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
@@ -50,7 +49,7 @@ export default function Login() {
 				toast.success("Login successful")
 				router.push("/trading")
 			} else {
-				toast.warn(data.message || "Login failed")
+				toast.error(data.message || "Login failed")
 			}
 		} catch (error) {
 			console.error("Login error:", error)
@@ -60,7 +59,6 @@ export default function Login() {
 
 	return (
 		<>
-			<ToastContainer />
 			<section className="w-full min-h-screen  flex items-center justify-center bg-white">
 				<form className="login card w-[300px] sm:w-[350px] md:w-[500px] xl:w-3/12 h-[700px] bg-black flex flex-col gap-4 items-center justify-start pt-10   shadow-2xl  rounded-lg ">
 					<Image
