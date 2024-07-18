@@ -66,6 +66,27 @@ export default function UserTrades({ params }) {
 			})
 	}
 
+	const handleReset = async () => {
+		await axios
+			.post(
+				`${API_BASE_URL}/users/reset/${params?.slug}`,
+				{},
+				{
+					headers: {
+						Authorization: `Bearer ${state?.accessToken}`
+					}
+				}
+			)
+			?.then((res) => {
+				console.log(res)
+				setTrades(res?.data?.data?.trades)
+				toast?.success(res?.data?.message)
+			})
+			?.catch((err) => {
+				console.error(err)
+			})
+	}
+
 	return (
 		<div className="h-screen w-screen bg-primary flex flex-col">
 			<div className="h-32 w-full bg-black shadow-xl gap-10 px-5 flex items-center">
@@ -91,9 +112,7 @@ export default function UserTrades({ params }) {
 						</div>
 						<button
 							className="h-12 w-40 flex items-center justify-center rounded-xl bg-secondary text-white font-semibold"
-							onClick={() => {
-								router?.back()
-							}}
+							onClick={handleReset}
 						>
 							Reset
 						</button>
