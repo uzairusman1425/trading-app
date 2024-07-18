@@ -95,6 +95,14 @@ export default function UserTrades({ params }) {
 								router?.back()
 							}}
 						>
+							Reset
+						</button>
+						<button
+							className="h-12 w-40 flex items-center justify-center rounded-xl bg-white text-secondary font-semibold"
+							onClick={() => {
+								router?.back()
+							}}
+						>
 							Back
 						</button>
 					</div>
