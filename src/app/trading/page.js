@@ -23,7 +23,10 @@ export default function Trading() {
 
 	const [isBuyModalVisible, setIsBuyModalVisible] = useState(false)
 	const [isSortModalVisible, setIsSortModalVisible] = useState(false)
-	const [isSellModalVisisble, setIsSellModalVisible] = useState(false)
+	const [isSellModalVisible, setIsSellModalVisible] = useState(false)
+	const [showTradeConfirmationPopup, setShowTradeConfirmationPopup] =
+		useState(false)
+	const confirmRef = useRef()
 	const buyRef = useRef()
 	const sortref = useRef()
 	const sellRef = useRef()
@@ -53,6 +56,9 @@ export default function Trading() {
 	}
 
 	const handleOutsideClick = (e) => {
+		if (confirmRef.current && !confirmRef.current.contains(e.target)) {
+			setShowTradeConfirmationPopup(false)
+		}
 		if (buyRef.current && !buyRef.current.contains(e.target)) {
 			setIsBuyModalVisible(false)
 		}
@@ -236,8 +242,33 @@ export default function Trading() {
 		fetchLiveRates()
 	}, [])
 
+	const handleRefresh = async () => {
+		await axios
+			?.post(
+				`${API_BASE_URL}/users/single`,
+				{},
+				{
+					headers: {
+						Authorization: `Bearer ${token}`
+					}
+				}
+			)
+			?.then((res) => {
+				console.log(res)
+				setUserData(res?.data?.user)
+			})
+			?.catch((err) => {
+				console.log(err)
+			})
+	}
+
 	useEffect(() => {
-		if (isBuyModalVisible || isSortModalVisible || isSellModalVisisble) {
+		if (
+			isBuyModalVisible ||
+			isSortModalVisible ||
+			isSellModalVisible ||
+			showTradeConfirmationPopup
+		) {
 			document.addEventListener("mousedown", handleOutsideClick)
 		} else {
 			document.removeEventListener("mousedown", handleOutsideClick)
@@ -245,7 +276,12 @@ export default function Trading() {
 		return () => {
 			document.removeEventListener("mousedown", handleOutsideClick)
 		}
-	}, [isBuyModalVisible, isSortModalVisible, isSellModalVisisble])
+	}, [
+		isBuyModalVisible,
+		isSortModalVisible,
+		isSellModalVisible,
+		showTradeConfirmationPopup
+	])
 
 	const handleBuyNow = () => {
 		setBuyNow(true)
@@ -307,6 +343,16 @@ export default function Trading() {
 		} else if (orderType === "buyAt") {
 			// await callBuyAtAPI();
 		}
+
+		// if (userData?.wallets?.length > 0) {
+		// 	// if (orderType === "buyNow") {
+		// 	// 	await callBuyNowAPI()
+		// 	// } else if (orderType === "buyAt") {
+		// 	// 	// await callBuyAtAPI();
+		// 	// }
+		// } else {
+		// 	setShowTradeConfirmationPopup(true)
+		// }
 	}
 
 	const callBuyNowAPI = async () => {
@@ -330,6 +376,7 @@ export default function Trading() {
 
 		if (response.ok) {
 			toast.success(data.message)
+			handleRefresh()
 		} else {
 			toast.error(data.message)
 		}
@@ -411,7 +458,7 @@ export default function Trading() {
 						<div className="flex items-center gap-2">
 							<LuCircleDollarSign className="text-2xl text-secondary" />
 							<h1 className="font-bold text-2xl text-white">
-								Total Assets : 0{" "}
+								Equity : 0{" "}
 							</h1>
 						</div>
 						<div className="flex items-center gap-2">
@@ -427,9 +474,9 @@ export default function Trading() {
 							</h1>
 						</div>
 						<div className="flex items-center gap-2">
-							<FaHouseUser className="text-2xl text-secondary" />
+							<LuCircleDollarSign className="text-2xl text-secondary" />
 							<h1 className="font-bold text-white text-2xl">
-								Sorted Holdings : 0
+								Open P/L : 0
 							</h1>
 						</div>
 					</div>
@@ -452,7 +499,7 @@ export default function Trading() {
 						</button>
 						<button
 							onClick={() =>
-								setIsSellModalVisible(!isSellModalVisisble)
+								setIsSellModalVisible(!isSellModalVisible)
 							}
 							className="bg-secondary text-white font-bold px-5 py-3 rounded-lg"
 						>
@@ -482,10 +529,18 @@ export default function Trading() {
 						<p className="w-[10%]"> Order </p>
 						<p className="w-[10%]"> Completed Price At</p>
 					</div>
-					<OrderCard userid={userId} token={token} />
+					<OrderCard trades={userData?.trades} />
 				</div>
 			</div>
 
+			{showTradeConfirmationPopup && (
+				<div className="buy fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+					<form
+						ref={confirmRef}
+						className="buycontent w-[300px] sm:w-[400px] lg:w-3/12 flex flex-col items-start pl-4 justify-center gap-10 h-[350px] bg-black border-2 border-secondary rounded-lg overflow-auto"
+					></form>
+				</div>
+			)}
 			{isBuyModalVisible && (
 				<div className="buy fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
 					<form
@@ -598,7 +653,7 @@ export default function Trading() {
 				</div>
 			)}
 
-			{isSellModalVisisble && (
+			{isSellModalVisible && (
 				<div className="buy fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
 					<div
 						ref={sellRef}
