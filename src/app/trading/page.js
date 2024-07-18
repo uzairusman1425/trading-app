@@ -91,8 +91,9 @@ export default function Trading() {
 					console.log(err)
 				})
 		})()
-
-		const fetchLiveRates = async () => {
+	}, [API_BASE_URL, token])
+	useEffect(() => {
+		;(async () => {
 			const API_KEY = "99bGpKM4Tt5iQO5NBMlV"
 			const BASE_URL = "https://marketdata.tradermade.com/api/v1/live"
 			const symbols = [
@@ -237,30 +238,8 @@ export default function Trading() {
 			} catch (error) {
 				console.error("Error fetching live rates:", error)
 			}
-		}
-
-		fetchLiveRates()
+		})()
 	}, [])
-
-	const handleRefresh = async () => {
-		await axios
-			?.post(
-				`${API_BASE_URL}/users/single`,
-				{},
-				{
-					headers: {
-						Authorization: `Bearer ${token}`
-					}
-				}
-			)
-			?.then((res) => {
-				console.log(res)
-				setUserData(res?.data?.user)
-			})
-			?.catch((err) => {
-				console.log(err)
-			})
-	}
 
 	useEffect(() => {
 		if (
@@ -282,6 +261,26 @@ export default function Trading() {
 		isSellModalVisible,
 		showTradeConfirmationPopup
 	])
+
+	const handleRefresh = async () => {
+		await axios
+			?.post(
+				`${API_BASE_URL}/users/single`,
+				{},
+				{
+					headers: {
+						Authorization: `Bearer ${token}`
+					}
+				}
+			)
+			?.then((res) => {
+				console.log(res)
+				setUserData(res?.data?.user)
+			})
+			?.catch((err) => {
+				console.log(err)
+			})
+	}
 
 	const handleBuyNow = () => {
 		setBuyNow(true)
