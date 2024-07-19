@@ -8,19 +8,20 @@ import { FaEyeSlash } from "react-icons/fa6"
 import { CiLock } from "react-icons/ci"
 import { useRouter } from "next/navigation"
 import Cookies from "js-cookie"
+import axios from "axios"
 import toast from "react-hot-toast"
 
 export default function Login() {
 	const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
-	const [passwordhidden, setPasswordHidden] = useState(true)
+	const [passwordHidden, setPasswordHidden] = useState(true)
 	const router = useRouter()
-	const [email, setemail] = useState("")
+	const [email, setEmail] = useState("")
 	const [password, setPassword] = useState("")
 
 	const HandlePasswordInput = (e) => {
 		e.preventDefault()
-		setPasswordHidden(!passwordhidden)
+		setPasswordHidden(!passwordHidden)
 	}
 
 	const handleLogin = async (e) => {
@@ -31,30 +32,20 @@ export default function Login() {
 			return
 		}
 
-		try {
-			const response = await fetch(`${API_BASE_URL}/auth/login`, {
-				method: "POST",
-				body: JSON.stringify({ email, password }),
-				headers: {
-					"Content-Type": "application/json"
-				}
-			})
-
-			const data = await response.json()
-			const { accessToken, refreshToken } = data
-			Cookies.set("accessToken", accessToken, { expires: 7, path: "/" })
-			Cookies.set("refreshToken", refreshToken, { expires: 7, path: "/" })
-			Cookies.set("userId", data.userDetails._id, { expires: 7 })
-			if (response.ok) {
+		await axios
+			.post(`${API_BASE_URL}/auth/login`, { email, password })
+			?.then((res) => {
+				console.log(res)
+				Cookies.set("accessToken", res?.data?.accessToken)
+				Cookies.set("refreshToken", res?.data?.refreshToken)
+				Cookies.set("userId", res?.data?.userDetails?._id)
 				toast.success("Login successful")
 				router.push("/trading")
-			} else {
-				toast.error(data.message || "Login failed")
-			}
-		} catch (error) {
-			console.error("Login error:", error)
-			toast.error("Login failed. Please try again later.")
-		}
+			})
+			?.catch((err) => {
+				console.log(err)
+				toast.error(err?.response?.data?.message || "Login failed")
+			})
 	}
 
 	return (
@@ -73,7 +64,7 @@ export default function Login() {
 							<input
 								value={email}
 								onChange={(e) => {
-									setemail(e.target.value)
+									setEmail(e.target.value)
 								}}
 								type="email"
 								className="bg-primary outline-none text-white w-full"
@@ -87,7 +78,7 @@ export default function Login() {
 									setPassword(e.target.value)
 								}}
 								value={password}
-								type={passwordhidden ? "password" : "text"}
+								type={passwordHidden ? "password" : "text"}
 								className="bg-primary outline-none text-white w-full"
 								placeholder="Password"
 							/>
@@ -95,7 +86,7 @@ export default function Login() {
 								className="text-secondary absolute right-4"
 								onClick={HandlePasswordInput}
 							>
-								{passwordhidden ? <LuEye /> : <FaEyeSlash />}
+								{passwordHidden ? <LuEye /> : <FaEyeSlash />}
 							</button>
 						</div>
 						<Link href={""} className="text-gray-400">
